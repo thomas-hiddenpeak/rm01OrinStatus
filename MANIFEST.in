@@ -1,0 +1,10 @@
+include README.md
+include LICENSE
+include requirements.txt
+include pyproject.toml
+include setup.py
+include examples.py
+include install_package.sh
+include *.sh
+recursive-include src/tegrastats_api *.py
+recursive-include src/tegrastats_api *.typed

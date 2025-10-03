@@ -1,0 +1,42 @@
+[Unit]
+Description=Tegrastats HTTP API Service
+Documentation=https://github.com/your-repo/tegrastats-api
+After=network.target network-online.target
+Wants=network-online.target
+StartLimitIntervalSec=60
+StartLimitBurst=3
+
+[Service]
+Type=simple
+User=%USERNAME%
+Group=%USERNAME%
+WorkingDirectory=%WORKING_DIR%
+Environment=PATH=%CONDA_ENV_PATH%/bin:/usr/local/bin:/usr/bin:/bin
+Environment=PYTHONPATH=%WORKING_DIR%
+Environment=CONDA_DEFAULT_ENV=tegrastats-api
+ExecStart=%PYTHON_PATH% %WORKING_DIR%/app.py
+ExecReload=/bin/kill -HUP $MAINPID
+KillMode=mixed
+KillSignal=SIGTERM
+TimeoutStopSec=30
+Restart=always
+RestartSec=10
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=tegrastats-api
+
+# 安全设置
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=false
+ReadWritePaths=%WORKING_DIR%
+ReadWritePaths=/tmp
+ReadWritePaths=/var/tmp
+
+# 资源限制
+LimitNOFILE=65536
+LimitNPROC=4096
+
+[Install]
+WantedBy=multi-user.target

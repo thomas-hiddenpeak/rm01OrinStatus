@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tegrastats API 测试页面</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .status {
+            display: inline-block;
+            padding: 5px 10px;
+            border-radius: 4px;
+            color: white;
+            font-weight: bold;
+        }
+        .connected { background-color: #28a745; }
+        .disconnected { background-color: #dc3545; }
+        .data-section {
+            margin: 20px 0;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 15px;
+        }
+        .data-section h3 {
+            margin-top: 0;
+            color: #333;
+        }
+        pre {
+            background-color: #f8f9fa;
+            padding: 10px;
+            border-radius: 4px;
+            overflow-x: auto;
+            max-height: 300px;
+        }
+        button {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        button:disabled {
+            background-color: #6c757d;
+            cursor: not-allowed;
+        }
+        .controls {
+            margin: 20px 0;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 4px;
+        }
+        .metric {
+            display: inline-block;
+            margin: 10px;
+            padding: 10px;
+            background-color: #e9ecef;
+            border-radius: 4px;
+            min-width: 120px;
+            text-align: center;
+        }
+        .metric-value {
+            font-size: 24px;
+            font-weight: bold;
+            color: #007bff;
+        }
+        .metric-label {
+            font-size: 12px;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Tegrastats API 测试页面</h1>
+        
+        <div class="controls">
+            <h3>连接控制</h3>
+            <p>WebSocket状态: <span id="ws-status" class="status disconnected">未连接</span></p>
+            <button id="connect-btn" onclick="connectWebSocket()">连接 WebSocket</button>
+            <button id="disconnect-btn" onclick="disconnectWebSocket()" disabled>断开连接</button>
+            <button onclick="testRestAPI()">测试 REST API</button>
+            <button onclick="clearLogs()">清除日志</button>
+        </div>
+
+        <div class="data-section">
+            <h3>实时数据概览</h3>
+            <div id="metrics-overview">
+                <div class="metric">
+                    <div class="metric-value" id="cpu-usage">--</div>
+                    <div class="metric-label">CPU平均使用率 (%)</div>
+                </div>
+                <div class="metric">
+                    <div class="metric-value" id="memory-usage">--</div>
+                    <div class="metric-label">内存使用率 (%)</div>
+                </div>
+                <div class="metric">
+                    <div class="metric-value" id="cpu-temp">--</div>
+                    <div class="metric-label">CPU温度 (°C)</div>
+                </div>
+                <div class="metric">
+                    <div class="metric-value" id="power-total">--</div>
+                    <div class="metric-label">总功耗 (W)</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="data-section">
+            <h3>最新数据 (WebSocket)</h3>
+            <pre id="websocket-data">等待WebSocket数据...</pre>
+        </div>
+
+        <div class="data-section">
+            <h3>REST API 测试结果</h3>
+            <pre id="rest-data">点击"测试 REST API"按钮获取数据</pre>
+        </div>
+
+        <div class="data-section">
+            <h3>日志</h3>
+            <pre id="logs"></pre>
+        </div>
+    </div>
+
+    <script src="https://cdn.socket.io/4.5.0/socket.io.min.js"></script>
+    <script>
+        let socket = null;
+        let isConnected = false;
+
+        function log(message) {
+            const logs = document.getElementById('logs');
+            const timestamp = new Date().toLocaleTimeString();
+            logs.textContent += `[${timestamp}] ${message}\n`;
+            logs.scrollTop = logs.scrollHeight;
+        }
+
+        function updateConnectionStatus(connected) {
+            isConnected = connected;
+            const status = document.getElementById('ws-status');
+            const connectBtn = document.getElementById('connect-btn');
+            const disconnectBtn = document.getElementById('disconnect-btn');
+
+            if (connected) {
+                status.textContent = '已连接';
+                status.className = 'status connected';
+                connectBtn.disabled = true;
+                disconnectBtn.disabled = false;
+            } else {
+                status.textContent = '未连接';
+                status.className = 'status disconnected';
+                connectBtn.disabled = false;
+                disconnectBtn.disabled = true;
+            }
+        }
+
+        function updateMetrics(data) {
+            try {
+                // CPU平均使用率
+                if (data.cpu && data.cpu.cores) {
+                    const totalUsage = data.cpu.cores.reduce((sum, core) => sum + core.usage, 0);
+                    const avgUsage = (totalUsage / data.cpu.cores.length).toFixed(1);
+                    document.getElementById('cpu-usage').textContent = avgUsage;
+                }
+
+                // 内存使用率
+                if (data.memory && data.memory.ram) {
+                    const memUsage = ((data.memory.ram.used / data.memory.ram.total) * 100).toFixed(1);
+                    document.getElementById('memory-usage').textContent = memUsage;
+                }
+
+                // CPU温度
+                if (data.temperature && data.temperature.cpu) {
+                    document.getElementById('cpu-temp').textContent = data.temperature.cpu.toFixed(1);
+                }
+
+                // 总功耗
+                if (data.power) {
+                    let totalPower = 0;
+                    Object.values(data.power).forEach(p => {
+                        if (p.current) totalPower += p.current;
+                    });
+                    document.getElementById('power-total').textContent = (totalPower / 1000).toFixed(1);
+                }
+            } catch (e) {
+                log('更新指标时出错: ' + e.message);
+            }
+        }
+
+        function connectWebSocket() {
+            if (socket) {
+                socket.disconnect();
+            }
+
+            const serverUrl = window.location.origin;
+            log(`正在连接到 ${serverUrl}...`);
+
+            socket = io(serverUrl);
+
+            socket.on('connect', function() {
+                log('WebSocket连接成功');
+                updateConnectionStatus(true);
+            });
+
+            socket.on('disconnect', function() {
+                log('WebSocket连接断开');
+                updateConnectionStatus(false);
+            });
+
+            socket.on('status_update', function(data) {
+                log('收到状态更新');
+                document.getElementById('websocket-data').textContent = JSON.stringify(data, null, 2);
+                updateMetrics(data);
+            });
+
+            socket.on('error', function(error) {
+                log('WebSocket错误: ' + JSON.stringify(error));
+            });
+
+            socket.on('pong', function(data) {
+                log('收到pong: ' + JSON.stringify(data));
+            });
+        }
+
+        function disconnectWebSocket() {
+            if (socket) {
+                socket.disconnect();
+                socket = null;
+            }
+            updateConnectionStatus(false);
+            log('WebSocket连接已断开');
+        }
+
+        async function testRestAPI() {
+            const endpoints = [
+                '/api/health',
+                '/api/status',
+                '/api/cpu',
+                '/api/memory',
+                '/api/temperature',
+                '/api/power'
+            ];
+
+            let results = {};
+
+            for (const endpoint of endpoints) {
+                try {
+                    log(`测试 ${endpoint}...`);
+                    const response = await fetch(endpoint);
+                    const data = await response.json();
+                    results[endpoint] = {
+                        status: response.status,
+                        data: data
+                    };
+                    log(`${endpoint} - 状态: ${response.status}`);
+                } catch (error) {
+                    log(`${endpoint} - 错误: ${error.message}`);
+                    results[endpoint] = {
+                        error: error.message
+                    };
+                }
+            }
+
+            document.getElementById('rest-data').textContent = JSON.stringify(results, null, 2);
+        }
+
+        function clearLogs() {
+            document.getElementById('logs').textContent = '';
+        }
+
+        // 页面加载完成后自动连接
+        window.addEventListener('load', function() {
+            log('页面加载完成');
+            updateConnectionStatus(false);
+        });
+
+        // 页面关闭前断开连接
+        window.addEventListener('beforeunload', function() {
+            if (socket) {
+                socket.disconnect();
+            }
+        });
+    </script>
+</body>
+</html>
