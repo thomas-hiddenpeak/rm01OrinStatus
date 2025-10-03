@@ -111,7 +111,7 @@ rm01OrinStatus/
 
 2. **创建GitHub仓库**并推送:
    ```bash
-   git remote add origin https://github.com/your-username/tegrastats-api.git
+   git remote add origin https://github.com/thomas-hiddenpeak/rm01OrinStatus.git
    git push -u origin main
    ```
 

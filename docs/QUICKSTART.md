@@ -13,8 +13,8 @@
 
 ### 步骤1：克隆项目
 ```bash
-git clone https://github.com/your-username/tegrastats-api.git
-cd tegrastats-api
+git clone https://github.com/thomas-hiddenpeak/rm01OrinStatus.git
+cd rm01OrinStatus
 ```
 
 ### 步骤2：运行安装脚本
@@ -103,9 +103,10 @@ socket.on('tegrastats_update', (data) => {
 
 ## 🎯 下一步
 
-- 查看 [API参考文档](docs/API_REFERENCE.md)
-- 探索 [示例代码](examples/)
-- 阅读 [部署指南](docs/DEPLOYMENT_GUIDE.md)
+- 查看 [API参考文档](API_REFERENCE.md)
+- 探索 [示例代码](../examples/)
+- 阅读 [部署指南](DEPLOYMENT_GUIDE.md)
+- 了解 [Wheel包构建](WHEEL_BUILD_GUIDE.md)
 - 参与 [项目贡献](CONTRIBUTING.md)
 
 ## 🆘 遇到问题？
@@ -116,7 +117,7 @@ socket.on('tegrastats_update', (data) => {
 3. **权限问题**: 确保有sudo权限并且tegrastats命令可用
 
 ### 获取帮助
-- 查看 [GitHub Issues](https://github.com/your-username/tegrastats-api/issues)
+- 查看 [GitHub Issues](https://github.com/thomas-hiddenpeak/rm01OrinStatus/issues)
 - 参考 [故障排除指南](docs/TROUBLESHOOTING.md)
 - 联系维护者
 

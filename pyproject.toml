@@ -7,19 +7,18 @@ name = "tegrastats-api"
 version = "1.0.0"
 description = "HTTP API and WebSocket server for NVIDIA Jetson tegrastats monitoring"
 readme = "README.md"
-license = {text = "MIT"}
+license = "MIT"
 authors = [
-    {name = "Tegrastats API Team", email = "contact@example.com"}
+    {name = "Thomas Hiddenpeak", email = "thomashiddenpeak@gmail.com"}
 ]
 maintainers = [
-    {name = "Tegrastats API Team", email = "contact@example.com"}
+    {name = "Thomas Hiddenpeak", email = "thomashiddenpeak@gmail.com"}
 ]
 keywords = ["jetson", "tegrastats", "monitoring", "api", "websocket", "esp32"]
 classifiers = [
     "Development Status :: 4 - Beta",
     "Intended Audience :: Developers",
     "Intended Audience :: System Administrators",
-    "License :: OSI Approved :: MIT License",
     "Operating System :: POSIX :: Linux",
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3.8",
@@ -59,10 +58,10 @@ test = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/your-org/tegrastats-api"
-Documentation = "https://github.com/your-org/tegrastats-api/blob/main/README.md"
-Repository = "https://github.com/your-org/tegrastats-api.git"
-"Bug Tracker" = "https://github.com/your-org/tegrastats-api/issues"
+Homepage = "https://github.com/thomas-hiddenpeak/rm01OrinStatus"
+Documentation = "https://github.com/thomas-hiddenpeak/rm01OrinStatus/blob/main/README.md"
+Repository = "https://github.com/thomas-hiddenpeak/rm01OrinStatus.git"
+"Bug Tracker" = "https://github.com/thomas-hiddenpeak/rm01OrinStatus/issues"
 
 [project.scripts]
 tegrastats-api = "tegrastats_api.cli:main"

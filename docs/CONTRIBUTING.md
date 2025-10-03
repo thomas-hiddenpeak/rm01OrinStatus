@@ -6,8 +6,8 @@
 
 1. **克隆仓库**
    ```bash
-   git clone https://github.com/your-username/tegrastats-api.git
-   cd tegrastats-api
+   git clone https://github.com/thomas-hiddenpeak/rm01OrinStatus.git
+   cd rm01OrinStatus
    ```
 
 2. **设置开发环境**

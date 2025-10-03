@@ -2,7 +2,7 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Python 3.9+](https://img.shields.io/badge/python-3.9+-blue.svg)](https://www.python.org/downloads/)
-[![GitHub Release](https://img.shields.io/github/release/your-username/tegrastats-api.svg)](https://github.com/your-username/tegrastats-api/releases)
+[![GitHub Release](https://img.shields.io/github/release/thomas-hiddenpeak/rm01OrinStatus.svg)](https://github.com/thomas-hiddenpeak/rm01OrinStatus/releases)
 
 > 🚀 **高性能的NVIDIA Jetson系统监控API服务**  
 > 提供实时系统状态监控、RESTful API接口和WebSocket数据流
@@ -13,8 +13,8 @@
 
 ```bash
 # 克隆项目
-git clone https://github.com/your-username/tegrastats-api.git
-cd tegrastats-api
+git clone https://github.com/thomas-hiddenpeak/rm01OrinStatus.git
+cd rm01OrinStatus
 
 # 一键安装 (自动创建conda环境、安装依赖、配置服务)
 ./scripts/install.sh
@@ -65,7 +65,8 @@ python -m pytest tests/
 | [📋 安装指南](docs/INSTALLATION_GUIDE.md) | 详细安装步骤和配置 |
 | [📖 API参考](docs/API_REFERENCE.md) | 完整API文档和示例 |
 | [🛠️ 部署指南](docs/DEPLOYMENT_GUIDE.md) | 生产环境部署 |
-| [🤝 贡献指南](CONTRIBUTING.md) | 参与项目开发 |
+| [📦 Wheel构建](docs/WHEEL_BUILD_GUIDE.md) | 包构建和分发指南 |
+| [🤝 贡献指南](docs/CONTRIBUTING.md) | 参与项目开发 |
 
 ## 📖 使用示例
 
@@ -103,9 +104,9 @@ print(response.json())
 
 ## 🤝 社区与支持
 
-- 🐛 [问题反馈](https://github.com/your-username/tegrastats-api/issues)
-- 💡 [功能建议](https://github.com/your-username/tegrastats-api/discussions)
-- 📧 联系维护者: your-email@example.com
+- 🐛 [问题反馈](https://github.com/thomas-hiddenpeak/rm01OrinStatus/issues)
+- 💡 [功能建议](https://github.com/thomas-hiddenpeak/rm01OrinStatus/discussions)
+- 📧 联系维护者: thomashiddenpeak@gmail.com
 - 📝 [更新日志](CHANGELOG.md)
 
 ## 📄 许可证

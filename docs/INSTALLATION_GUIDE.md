@@ -4,7 +4,29 @@
 
 Tegrastats API 支持多种安装方式，每种方式适合不同的使用场景：
 
-### 1. 专用Conda环境安装（推荐）
+### 1. Wheel包安装（推荐）
+
+使用预构建的wheel包进行安装：
+
+```bash
+# 从本地wheel包安装
+pip install dist/tegrastats_api-1.0.0-py3-none-any.whl
+
+# 或从GitHub Releases下载安装
+pip install https://github.com/thomas-hiddenpeak/rm01OrinStatus/releases/download/v1.0.0/tegrastats_api-1.0.0-py3-none-any.whl
+
+# 验证安装
+tegrastats-api --version
+tegrastats-api test
+```
+
+**优点：**
+- 安装速度最快
+- 不需要构建环境
+- 依赖自动管理
+- 支持离线安装
+
+### 2. 专用Conda环境安装
 
 创建专用环境，与其他项目隔离：
 
