@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "tegrastats-api"
-version = "1.0.0"
+version = "1.0.1"
 description = "HTTP API and WebSocket server for NVIDIA Jetson tegrastats monitoring"
 readme = "README.md"
 license = "MIT"
